@@ -1,0 +1,290 @@
+/* ===== 리셋 및 기본 설정 ===== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background-color: #f5f7fa;
+  color: #1a1a1a;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 48px 16px;
+}
+
+/* ===== 레이아웃 컨테이너 ===== */
+.container {
+  width: 100%;
+  max-width: 560px;
+}
+
+/* ===== 헤더 ===== */
+.header {
+  margin-bottom: 32px;
+}
+
+.header__title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #3182f6;
+  letter-spacing: -0.5px;
+}
+
+.header__subtitle {
+  margin-top: 6px;
+  font-size: 0.9rem;
+  color: #888;
+}
+
+/* ===== 입력 영역 ===== */
+.input-section {
+  margin-bottom: 24px;
+}
+
+.input-wrapper {
+  display: flex;
+  gap: 8px;
+}
+
+.todo-input {
+  flex: 1;
+  height: 48px;
+  padding: 0 16px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  outline: none;
+  background: #fff;
+  transition: border-color 0.2s;
+}
+
+.todo-input:focus {
+  border-color: #3182f6;
+}
+
+/* 입력값 오류 상태 */
+.todo-input.is-error {
+  border-color: #f04452;
+}
+
+/* ===== 버튼 공통 스타일 ===== */
+.btn {
+  height: 48px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    transform 0.1s;
+  white-space: nowrap;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+/* 주요(파란) 버튼 */
+.btn--primary {
+  background-color: #3182f6;
+  color: #fff;
+}
+
+.btn--primary:hover {
+  background-color: #1a6de0;
+}
+
+/* 수정 버튼 */
+.btn--edit {
+  background-color: #f0f4ff;
+  color: #3182f6;
+  height: 32px;
+  padding: 0 12px;
+  font-size: 0.8rem;
+  border-radius: 7px;
+}
+
+.btn--edit:hover {
+  background-color: #dbeafe;
+}
+
+/* 저장 버튼 */
+.btn--save {
+  background-color: #3182f6;
+  color: #fff;
+  height: 32px;
+  padding: 0 12px;
+  font-size: 0.8rem;
+  border-radius: 7px;
+}
+
+.btn--save:hover {
+  background-color: #1a6de0;
+}
+
+/* 삭제 버튼 */
+.btn--delete {
+  background-color: #fff0f1;
+  color: #f04452;
+  height: 32px;
+  padding: 0 12px;
+  font-size: 0.8rem;
+  border-radius: 7px;
+}
+
+.btn--delete:hover {
+  background-color: #ffd6d9;
+}
+
+/* ===== 오류 메시지 ===== */
+.error-message {
+  margin-top: 8px;
+  font-size: 0.82rem;
+  color: #f04452;
+  padding-left: 4px;
+}
+
+.hidden {
+  display: none;
+}
+
+/* ===== Todo 목록 ===== */
+.todo-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ===== Todo 아이템 카드 ===== */
+.todo-item {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.2s;
+  animation: fadeIn 0.2s ease;
+}
+
+.todo-item:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* 완료된 항목의 카드 스타일 */
+.todo-item.is-completed {
+  background-color: #f8f9fb;
+  opacity: 0.7;
+}
+
+/* 완료 체크박스 */
+.todo-item__checkbox {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #d0d0d0;
+  border-radius: 50%;
+  flex-shrink: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s;
+}
+
+.todo-item__checkbox:hover {
+  border-color: #3182f6;
+}
+
+/* 완료 상태의 체크박스 */
+.todo-item.is-completed .todo-item__checkbox {
+  background-color: #3182f6;
+  border-color: #3182f6;
+}
+
+/* 체크 아이콘 (완료 시 표시) */
+.todo-item__checkbox::after {
+  content: "";
+  display: none;
+  width: 5px;
+  height: 9px;
+  border: 2px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg) translateX(-1px) translateY(-1px);
+}
+
+.todo-item.is-completed .todo-item__checkbox::after {
+  display: block;
+}
+
+/* Todo 텍스트 */
+.todo-item__text {
+  flex: 1;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+/* 완료된 항목의 텍스트: 취소선 + 회색 */
+.todo-item.is-completed .todo-item__text {
+  text-decoration: line-through;
+  color: #aaa;
+}
+
+/* 인라인 수정 입력창 */
+.todo-item__edit-input {
+  flex: 1;
+  height: 34px;
+  padding: 0 10px;
+  border: 1.5px solid #3182f6;
+  border-radius: 7px;
+  font-size: 0.95rem;
+  outline: none;
+  background: #f0f7ff;
+}
+
+/* 아이템 액션 버튼 그룹 */
+.todo-item__actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* ===== 빈 상태 메시지 ===== */
+.empty-state {
+  text-align: center;
+  padding: 48px 0;
+  color: #bbb;
+}
+
+.empty-state__icon {
+  font-size: 2.5rem;
+}
+
+.empty-state__text {
+  margin-top: 12px;
+  font-size: 0.9rem;
+}
+
+/* ===== 등장 애니메이션 ===== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
