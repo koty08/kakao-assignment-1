@@ -41,26 +41,37 @@ body {
   color: #888;
 }
 
-/* ===== 날짜 네비게이터 ===== */
-.date-nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+/* ===== 주간 뷰 네비게이터 ===== */
+.week-nav {
+  position: relative;
+  background: #fff;
+  border-radius: 14px;
+  padding: 14px 16px;
   margin-bottom: 16px;
-  background-color: #fff;
-  border-radius: 12px;
-  padding: 10px 16px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
 }
 
-.date-nav__arrow {
-  width: 32px;
-  height: 32px;
+.week-nav__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.week-nav__header-left {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.week-nav__arrow {
+  width: 28px;
+  height: 28px;
   border: none;
   border-radius: 8px;
   background: #f0f4ff;
   color: #3182f6;
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   line-height: 1;
   cursor: pointer;
   display: flex;
@@ -69,23 +80,43 @@ body {
   transition: background-color 0.15s;
 }
 
-.date-nav__arrow:hover {
+.week-nav__arrow:hover {
   background-color: #dbeafe;
 }
 
-.date-nav__label {
-  font-size: 0.95rem;
-  font-weight: 600;
+/* 클릭 가능한 주차 레이블 버튼 */
+.week-nav__label-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  font-size: 0.9rem;
+  font-weight: 700;
   color: #1a1a1a;
-  letter-spacing: -0.2px;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
 }
 
-/* 오늘 날짜일 때 강조 */
-.date-nav__label.is-today {
+.week-nav__label-btn:hover,
+.week-nav__label-btn.is-open {
+  background-color: #f0f4ff;
   color: #3182f6;
 }
 
-.date-nav__today {
+.week-nav__caret {
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+}
+
+.week-nav__label-btn.is-open .week-nav__caret {
+  transform: rotate(180deg);
+}
+
+/* 오늘 버튼 */
+.week-nav__today-btn {
   height: 28px;
   padding: 0 10px;
   border: 1.5px solid #3182f6;
@@ -98,20 +129,229 @@ body {
   transition: background-color 0.15s, color 0.15s;
 }
 
-.date-nav__today:hover {
+.week-nav__today-btn:hover {
   background-color: #3182f6;
   color: #fff;
 }
 
-.date-nav__today:disabled {
+.week-nav__today-btn:disabled {
   border-color: #d0d0d0;
   color: #bbb;
   cursor: default;
 }
 
-.date-nav__today:disabled:hover {
+.week-nav__today-btn:disabled:hover {
   background: transparent;
   color: #bbb;
+}
+
+/* ===== 요일 / 날짜 셀 그리드 ===== */
+.week-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.week-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 2px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.week-day:hover {
+  background-color: #f0f4ff;
+}
+
+.week-day__name {
+  font-size: 0.7rem;
+  color: #aaa;
+  font-weight: 500;
+}
+
+.week-day__date {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+/* Todo 개수 뱃지 */
+.week-day__count {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #fff;
+  background-color: #3182f6;
+  border-radius: 999px;
+  padding: 1px 5px;
+  min-width: 16px;
+  text-align: center;
+  line-height: 1.6;
+}
+
+.week-day__count.is-empty {
+  background: transparent;
+  min-height: 14px;
+}
+
+/* 토요일 */
+.week-day.is-saturday .week-day__name { color: #3182f6; }
+.week-day.is-saturday .week-day__date { color: #3182f6; }
+
+/* 일요일 */
+.week-day.is-sunday .week-day__name  { color: #f04452; }
+.week-day.is-sunday .week-day__date  { color: #f04452; }
+
+/* 오늘 날짜 */
+.week-day.is-today .week-day__date {
+  background-color: #e8f0fe;
+  color: #3182f6;
+}
+
+/* 선택된 날짜 */
+.week-day.is-selected .week-day__date {
+  background-color: #3182f6;
+  color: #fff;
+}
+
+/* ===== 주차 선택 드롭다운 ===== */
+.week-picker {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  z-index: 100;
+  max-height: 320px;
+  overflow-y: auto;
+  padding-bottom: 8px;
+}
+
+.week-picker__year-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  position: sticky;
+  top: 0;
+  background: #fff;
+}
+
+.week-picker__year {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.week-picker__year-arrow {
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 6px;
+  background: #f0f4ff;
+  color: #3182f6;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s;
+}
+
+.week-picker__year-arrow:hover {
+  background-color: #dbeafe;
+}
+
+.week-picker__month {
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.week-picker__month:last-child {
+  border-bottom: none;
+}
+
+.week-picker__month-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border: none;
+  background: transparent;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #444;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.week-picker__month-header:hover {
+  background-color: #f8f9fb;
+  color: #1a1a1a;
+}
+
+.week-picker__month-header.is-expanded {
+  color: #3182f6;
+}
+
+.week-picker__month-caret {
+  font-size: 0.65rem;
+  transition: transform 0.2s;
+}
+
+.week-picker__month-header.is-expanded .week-picker__month-caret {
+  transform: rotate(180deg);
+}
+
+.week-picker__weeks {
+  display: none;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 2px 12px 12px;
+}
+
+.week-picker__weeks.is-expanded {
+  display: flex;
+}
+
+.week-picker__week-btn {
+  flex: 1 1 calc(50% - 3px);
+  padding: 7px 10px;
+  border: 1.5px solid #e8e8e8;
+  border-radius: 8px;
+  background: transparent;
+  font-size: 0.75rem;
+  color: #555;
+  cursor: pointer;
+  text-align: left;
+  line-height: 1.5;
+  transition: border-color 0.15s, background-color 0.15s, color 0.15s;
+}
+
+.week-picker__week-btn:hover {
+  border-color: #3182f6;
+  color: #3182f6;
+  background-color: #f0f4ff;
+}
+
+/* 현재 보고 있는 주차 강조 */
+.week-picker__week-btn.is-current {
+  border-color: #3182f6;
+  background-color: #3182f6;
+  color: #fff;
+  font-weight: 700;
 }
 
 /* ===== 필터 탭 ===== */

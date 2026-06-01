@@ -13,12 +13,23 @@
         <p class="header__subtitle">오늘 할 일을 기록해보세요</p>
       </header>
 
-      <!-- 날짜 네비게이터 -->
-      <div class="date-nav">
-        <button class="date-nav__arrow" id="prevDateButton" aria-label="이전 날짜">&#8249;</button>
-        <span class="date-nav__label" id="dateLabel"></span>
-        <button class="date-nav__arrow" id="nextDateButton" aria-label="다음 날짜">&#8250;</button>
-        <button class="date-nav__today" id="todayButton">오늘</button>
+      <!-- 주간 뷰 네비게이터 -->
+      <div class="week-nav">
+        <div class="week-nav__header">
+          <div class="week-nav__header-left">
+            <button class="week-nav__arrow" id="prevWeekButton" aria-label="이전 주">&#8249;</button>
+            <button class="week-nav__label-btn" id="weekLabelButton">
+              <span id="weekLabel"></span>
+              <span class="week-nav__caret">▾</span>
+            </button>
+            <button class="week-nav__arrow" id="nextWeekButton" aria-label="다음 주">&#8250;</button>
+          </div>
+          <button class="week-nav__today-btn" id="todayButton">오늘</button>
+        </div>
+        <!-- 요일 / 날짜 셀 그리드 -->
+        <div class="week-days" id="weekDays"></div>
+        <!-- 주차 선택 드롭다운 -->
+        <div class="week-picker hidden" id="weekPicker"></div>
       </div>
 
       <!-- 필터 탭 -->
