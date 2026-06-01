@@ -24,6 +24,7 @@ let currentFilter = 'all';
 let selectedDate = getTodayString();
 
 // ===== 초기화 =====
+loadTodosFromStorage(); // 저장된 데이터 복원
 renderDateLabel();
 renderTodoList();
 
@@ -95,6 +96,7 @@ function handleAddTodo() {
   };
 
   todos.push(newTodo);
+  saveTodosToStorage();
   todoInput.value = '';
   clearInputError();
   renderTodoList();
@@ -105,12 +107,14 @@ function toggleTodoCompleted(id) {
   todos = todos.map((todo) =>
     todo.id === id ? { ...todo, completed: !todo.completed } : todo
   );
+  saveTodosToStorage();
   renderTodoList();
 }
 
 // ===== Todo 삭제 =====
 function deleteTodo(id) {
   todos = todos.filter((todo) => todo.id !== id);
+  saveTodosToStorage();
   renderTodoList();
 }
 
@@ -163,7 +167,25 @@ function saveEdit(id) {
   todos = todos.map((todo) =>
     todo.id === id ? { ...todo, text: newText } : todo
   );
+  saveTodosToStorage();
   renderTodoList();
+}
+
+// ===== 로컬스토리지에 todos 저장 =====
+function saveTodosToStorage() {
+  localStorage.setItem('todos', JSON.stringify(todos));
+}
+
+// ===== 로컬스토리지에서 todos 불러오기 =====
+function loadTodosFromStorage() {
+  const stored = localStorage.getItem('todos');
+  if (!stored) return;
+
+  todos = JSON.parse(stored);
+  // 저장된 id 중 가장 큰 값 이후부터 채번
+  if (todos.length > 0) {
+    nextId = Math.max(...todos.map((t) => t.id)) + 1;
+  }
 }
 
 // ===== 오늘 날짜를 YYYY-MM-DD 문자열로 반환 =====
