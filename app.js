@@ -150,7 +150,13 @@ function renderTodoList() {
 
   const filteredTodos = getFilteredTodos();
 
-  // 필터 결과가 없을 때 빈 상태 메시지 표시
+  // 필터별로 빈 상태일 때 메시지 문구 설정
+  const emptyMessages = {
+    all:       '등록된',
+    active:    '진행 중인',
+    completed: '완료된',
+  };
+  emptyState.querySelector(".empty-state__text").textContent = `${emptyMessages[currentFilter]} 할 일이 없습니다.`;
   emptyState.classList.toggle('hidden', filteredTodos.length > 0);
 
   filteredTodos.forEach((todo) => {
