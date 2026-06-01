@@ -1,10 +1,13 @@
 // ===== DOM 요소 참조 =====
-const todoInput     = document.getElementById('todoInput');
-const addButton     = document.getElementById('addButton');
-const todoList      = document.getElementById('todoList');
-const errorMessage  = document.getElementById('errorMessage');
-const emptyState    = document.getElementById('emptyState');
-const filterTabs    = document.getElementById('filterTabs');
+const todoInput      = document.getElementById('todoInput');
+const addButton      = document.getElementById('addButton');
+const todoList       = document.getElementById('todoList');
+const errorMessage   = document.getElementById('errorMessage');
+const emptyState     = document.getElementById('emptyState');
+const filterTabs     = document.getElementById('filterTabs');
+const dateLabel      = document.getElementById('dateLabel');
+const prevDateButton = document.getElementById('prevDateButton');
+const nextDateButton = document.getElementById('nextDateButton');
 
 // ===== 상태 =====
 // 각 Todo 항목을 { id, text, completed } 형태로 관리
@@ -16,7 +19,11 @@ let nextId = 1;
 // 현재 선택된 필터: 'all' | 'active' | 'completed'
 let currentFilter = 'all';
 
+// 현재 선택된 날짜 (YYYY-MM-DD 문자열로 관리)
+let selectedDate = getTodayString();
+
 // ===== 초기화 =====
+renderDateLabel();
 renderTodoList();
 
 // ===== 이벤트 리스너 =====
@@ -32,6 +39,20 @@ todoInput.addEventListener('keydown', (event) => {
 // 입력 중 오류 상태 해제
 todoInput.addEventListener('input', () => {
   clearInputError();
+});
+
+// 이전 날짜 버튼 클릭
+prevDateButton.addEventListener('click', () => {
+  selectedDate = shiftDate(selectedDate, -1);
+  renderDateLabel();
+  renderTodoList();
+});
+
+// 다음 날짜 버튼 클릭
+nextDateButton.addEventListener('click', () => {
+  selectedDate = shiftDate(selectedDate, +1);
+  renderDateLabel();
+  renderTodoList();
 });
 
 // 필터 탭 클릭
@@ -62,6 +83,7 @@ function handleAddTodo() {
     id: nextId++,
     text: inputText,
     completed: false,
+    date: selectedDate, // 현재 선택된 날짜에 Todo를 귀속
   };
 
   todos.push(newTodo);
@@ -136,11 +158,45 @@ function saveEdit(id) {
   renderTodoList();
 }
 
-// ===== 현재 필터에 맞는 Todo 목록 반환 =====
+// ===== 오늘 날짜를 YYYY-MM-DD 문자열로 반환 =====
+function getTodayString() {
+  return new Date().toLocaleDateString('sv-SE'); // sv-SE 로케일이 YYYY-MM-DD 형식
+}
+
+// ===== 날짜를 n일 앞/뒤로 이동한 YYYY-MM-DD 문자열 반환 =====
+function shiftDate(dateString, days) {
+  const date = new Date(dateString);
+  date.setDate(date.getDate() + days);
+  return date.toLocaleDateString('sv-SE');
+}
+
+// ===== 날짜 레이블 렌더링 =====
+function renderDateLabel() {
+  const today = getTodayString();
+  const date  = new Date(selectedDate);
+
+  // 요일 이름
+  const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+  const weekday  = weekdays[date.getDay()];
+
+  const month = date.getMonth() + 1;
+  const day   = date.getDate();
+
+  const isToday = selectedDate === today;
+  const todayBadge = isToday ? ' (오늘)' : '';
+
+  dateLabel.textContent = `${month}월 ${day}일 ${weekday}요일${todayBadge}`;
+  dateLabel.classList.toggle('is-today', isToday);
+}
+
+// ===== 선택된 날짜 + 현재 필터에 맞는 Todo 목록 반환 =====
 function getFilteredTodos() {
-  if (currentFilter === 'active')    return todos.filter((t) => !t.completed);
-  if (currentFilter === 'completed') return todos.filter((t) => t.completed);
-  return todos;
+  // 선택된 날짜의 Todo만 추출
+  const byDate = todos.filter((t) => t.date === selectedDate);
+
+  if (currentFilter === 'active')    return byDate.filter((t) => !t.completed);
+  if (currentFilter === 'completed') return byDate.filter((t) => t.completed);
+  return byDate;
 }
 
 // ===== 전체 목록 렌더링 =====

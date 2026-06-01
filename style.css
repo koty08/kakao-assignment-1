@@ -41,6 +41,50 @@ body {
   color: #888;
 }
 
+/* ===== 날짜 네비게이터 ===== */
+.date-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 10px 16px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.date-nav__arrow {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  background: #f0f4ff;
+  color: #3182f6;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s;
+}
+
+.date-nav__arrow:hover {
+  background-color: #dbeafe;
+}
+
+.date-nav__label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  letter-spacing: -0.2px;
+}
+
+/* 오늘 날짜일 때 강조 */
+.date-nav__label.is-today {
+  color: #3182f6;
+}
+
 /* ===== 필터 탭 ===== */
 .filter-tabs {
   display: flex;
