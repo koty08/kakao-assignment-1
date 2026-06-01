@@ -142,7 +142,7 @@ function createTodoElement(todo) {
     <div class="todo-item__checkbox" onclick="toggleTodoCompleted(${todo.id})"></div>
     <span class="todo-item__text">${escapeHtml(todo.text)}</span>
     <div class="todo-item__actions">
-      <button class="btn btn--edit" onclick="enterEditMode(${todo.id})" ${todo.completed ? 'disabled style="opacity:0.4;cursor:default"' : ''}>수정</button>
+      <button class="btn btn--edit" onclick="enterEditMode(${todo.id})">수정</button>
       <button class="btn btn--delete" onclick="deleteTodo(${todo.id})">삭제</button>
     </div>
   `;
