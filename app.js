@@ -20,8 +20,8 @@ let nextId = 1;
 // 현재 선택된 필터: 'all' | 'active' | 'completed'
 let currentFilter = 'all';
 
-// 현재 선택된 날짜 (YYYY-MM-DD 문자열로 관리)
-let selectedDate = getTodayString();
+// 현재 선택된 날짜(YYYY-MM-DD 형식으로), 없으면 오늘로 처리
+let selectedDate = localStorage.getItem('selectedDate') ?? getTodayString();
 
 // ===== 초기화 =====
 loadTodosFromStorage(); // 저장된 데이터 복원
@@ -46,6 +46,7 @@ todoInput.addEventListener('input', () => {
 // 이전 날짜 버튼 클릭
 prevDateButton.addEventListener('click', () => {
   selectedDate = shiftDate(selectedDate, -1);
+  localStorage.setItem('selectedDate', selectedDate);
   renderDateLabel();
   renderTodoList();
 });
@@ -53,6 +54,7 @@ prevDateButton.addEventListener('click', () => {
 // 다음 날짜 버튼 클릭
 nextDateButton.addEventListener('click', () => {
   selectedDate = shiftDate(selectedDate, +1);
+  localStorage.setItem('selectedDate', selectedDate);
   renderDateLabel();
   renderTodoList();
 });
@@ -60,6 +62,7 @@ nextDateButton.addEventListener('click', () => {
 // 오늘로 돌아가기 버튼
 todayButton.addEventListener('click', () => {
   selectedDate = getTodayString();
+  localStorage.setItem('selectedDate', selectedDate);
   renderDateLabel();
   renderTodoList();
 });
