@@ -196,16 +196,24 @@ function loadTodosFromStorage() {
 
 // ===== 날짜 유틸 =====
 
-// 오늘 날짜를 YYYY-MM-DD 문자열로 반환 (sv-SE 로케일이 해당 형식)
+// Date 객체를 내부 키 형식인 YYYY-MM-DD 문자열로 변환
+function toDateKey(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
+// 오늘 날짜를 YYYY-MM-DD 문자열로 반환
 function getTodayString() {
-  return new Date().toLocaleDateString('sv-SE');
+  return toDateKey(new Date());
 }
 
 // 날짜를 n일 앞/뒤로 이동한 YYYY-MM-DD 문자열 반환
 function shiftDate(dateString, days) {
   const d = new Date(dateString);
   d.setDate(d.getDate() + days);
-  return d.toLocaleDateString('sv-SE');
+  return toDateKey(d);
 }
 
 // 해당 날짜가 속한 주의 월요일 날짜 반환
@@ -213,7 +221,7 @@ function getWeekStartDate(dateString) {
   const d   = new Date(dateString);
   const day = d.getDay(); // 0=일, 1=월 ... 6=토
   d.setDate(d.getDate() + (day === 0 ? -6 : 1 - day));
-  return d.toLocaleDateString('sv-SE');
+  return toDateKey(d);
 }
 
 // 특정 연/월에 속하는 월요일 목록 반환 (월요일 기준, 0-indexed month)
@@ -222,7 +230,7 @@ function getMondaysInMonth(year, month) {
   const d = new Date(year, month, 1);
   while (d.getDay() !== 1) d.setDate(d.getDate() + 1); // 첫 번째 월요일 탐색
   while (d.getMonth() === month) {
-    mondays.push(d.toLocaleDateString('sv-SE'));
+    mondays.push(toDateKey(d));
     d.setDate(d.getDate() + 7);
   }
   return mondays;
