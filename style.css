@@ -41,6 +41,41 @@ body {
   color: #888;
 }
 
+/* ===== 필터 탭 ===== */
+.filter-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+  background-color: #eef2f7;
+  padding: 4px;
+  border-radius: 10px;
+}
+
+.filter-tab {
+  flex: 1;
+  height: 36px;
+  border: none;
+  border-radius: 7px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  background: transparent;
+  color: #888;
+  transition: background-color 0.15s, color 0.15s, box-shadow 0.15s;
+}
+
+.filter-tab:hover {
+  color: #3182f6;
+}
+
+/* 선택된 필터 탭 */
+.filter-tab.is-active {
+  background-color: #fff;
+  color: #3182f6;
+  font-weight: 700;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
 /* ===== 입력 영역 ===== */
 .input-section {
   margin-bottom: 24px;

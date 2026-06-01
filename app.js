@@ -4,6 +4,7 @@ const addButton     = document.getElementById('addButton');
 const todoList      = document.getElementById('todoList');
 const errorMessage  = document.getElementById('errorMessage');
 const emptyState    = document.getElementById('emptyState');
+const filterTabs    = document.getElementById('filterTabs');
 
 // ===== 상태 =====
 // 각 Todo 항목을 { id, text, completed } 형태로 관리
@@ -11,6 +12,9 @@ let todos = [];
 
 // 고유 ID 생성용 카운터
 let nextId = 1;
+
+// 현재 선택된 필터: 'all' | 'active' | 'completed'
+let currentFilter = 'all';
 
 // ===== 초기화 =====
 renderTodoList();
@@ -28,6 +32,20 @@ todoInput.addEventListener('keydown', (event) => {
 // 입력 중 오류 상태 해제
 todoInput.addEventListener('input', () => {
   clearInputError();
+});
+
+// 필터 탭 클릭
+filterTabs.addEventListener('click', (event) => {
+  const clickedTab = event.target.closest('.filter-tab');
+  if (!clickedTab) return;
+
+  // 선택된 탭 활성화
+  currentFilter = clickedTab.dataset.filter;
+  document.querySelectorAll('.filter-tab').forEach((tab) => {
+    tab.classList.toggle('is-active', tab === clickedTab);
+  });
+
+  renderTodoList();
 });
 
 // ===== Todo 추가 =====
@@ -118,15 +136,24 @@ function saveEdit(id) {
   renderTodoList();
 }
 
+// ===== 현재 필터에 맞는 Todo 목록 반환 =====
+function getFilteredTodos() {
+  if (currentFilter === 'active')    return todos.filter((t) => !t.completed);
+  if (currentFilter === 'completed') return todos.filter((t) => t.completed);
+  return todos;
+}
+
 // ===== 전체 목록 렌더링 =====
 function renderTodoList() {
   // 기존 목록 초기화
   todoList.innerHTML = '';
 
-  // 빈 상태 메시지 표시/숨김 처리
-  emptyState.classList.toggle('hidden', todos.length > 0);
+  const filteredTodos = getFilteredTodos();
 
-  todos.forEach((todo) => {
+  // 필터 결과가 없을 때 빈 상태 메시지 표시
+  emptyState.classList.toggle('hidden', filteredTodos.length > 0);
+
+  filteredTodos.forEach((todo) => {
     const listItem = createTodoElement(todo);
     todoList.appendChild(listItem);
   });
