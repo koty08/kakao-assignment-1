@@ -85,6 +85,35 @@ body {
   color: #3182f6;
 }
 
+.date-nav__today {
+  height: 28px;
+  padding: 0 10px;
+  border: 1.5px solid #3182f6;
+  border-radius: 7px;
+  background: transparent;
+  color: #3182f6;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.date-nav__today:hover {
+  background-color: #3182f6;
+  color: #fff;
+}
+
+.date-nav__today:disabled {
+  border-color: #d0d0d0;
+  color: #bbb;
+  cursor: default;
+}
+
+.date-nav__today:disabled:hover {
+  background: transparent;
+  color: #bbb;
+}
+
 /* ===== 필터 탭 ===== */
 .filter-tabs {
   display: flex;

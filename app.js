@@ -8,6 +8,7 @@ const filterTabs     = document.getElementById('filterTabs');
 const dateLabel      = document.getElementById('dateLabel');
 const prevDateButton = document.getElementById('prevDateButton');
 const nextDateButton = document.getElementById('nextDateButton');
+const todayButton    = document.getElementById('todayButton');
 
 // ===== 상태 =====
 // 각 Todo 항목을 { id, text, completed } 형태로 관리
@@ -51,6 +52,13 @@ prevDateButton.addEventListener('click', () => {
 // 다음 날짜 버튼 클릭
 nextDateButton.addEventListener('click', () => {
   selectedDate = shiftDate(selectedDate, +1);
+  renderDateLabel();
+  renderTodoList();
+});
+
+// 오늘로 돌아가기 버튼
+todayButton.addEventListener('click', () => {
+  selectedDate = getTodayString();
   renderDateLabel();
   renderTodoList();
 });
@@ -187,6 +195,8 @@ function renderDateLabel() {
 
   dateLabel.textContent = `${month}월 ${day}일 ${weekday}요일${todayBadge}`;
   dateLabel.classList.toggle('is-today', isToday);
+  // 이미 오늘이면 오늘로 돌아가기 버튼 비활성화 처리
+  todayButton.disabled = isToday;
 }
 
 // ===== 선택된 날짜 + 현재 필터에 맞는 Todo 목록 반환 =====
