@@ -1,1 +1,1 @@
-export { WeeklyView } from './ui/WeeklyView'
+export { WeeklyView } from "./ui/WeeklyView";
