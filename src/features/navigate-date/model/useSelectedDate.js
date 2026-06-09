@@ -29,5 +29,5 @@ export function useSelectedDate() {
 
   const goToToday = () => setSelectedDate(new Date());
 
-  return { selectedDate, goToPrev, goToNext, goToToday };
+  return { selectedDate, setSelectedDate, goToPrev, goToNext, goToToday };
 }

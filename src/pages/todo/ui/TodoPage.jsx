@@ -4,11 +4,12 @@ import { FILTER, toDateKey } from "@/shared/lib";
 import { useFilter, FilterTabs } from "@/features/filter-todos";
 import { useSelectedDate, DateNavigator } from "@/features/navigate-date";
 import { TodoListWidget } from "@/widgets/todo-list";
+import { WeeklyView } from "@/widgets/weekly-view";
 
 export function TodoPage() {
   const { todos, addTodo, deleteTodo, toggleTodo, editTodo } = useTodos();
   const { currentFilter, setFilter } = useFilter();
-  const { selectedDate, goToPrev, goToNext, goToToday } = useSelectedDate();
+  const { selectedDate, setSelectedDate, goToPrev, goToNext, goToToday } = useSelectedDate();
 
   const dateKey = toDateKey(selectedDate);
 
@@ -29,6 +30,7 @@ export function TodoPage() {
         </header>
 
         <div className="flex flex-col gap-4">
+          <WeeklyView selectedDate={selectedDate} todos={todos} onDateSelect={setSelectedDate} />
           <DateNavigator selectedDate={selectedDate} onPrev={goToPrev} onNext={goToNext} onToday={goToToday} />
           <FilterTabs currentFilter={currentFilter} onFilterChange={setFilter} />
           <AddTodoForm onAdd={(text) => addTodo(text, dateKey)} />
