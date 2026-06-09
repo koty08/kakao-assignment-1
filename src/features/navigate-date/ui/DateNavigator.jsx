@@ -1,14 +1,4 @@
-import { toDateKey } from "@/shared/lib";
-
-const DAY_NAMES = ["일", "월", "화", "수", "목", "금", "토"];
-
-function formatDate(date) {
-  const y = date.getFullYear();
-  const m = date.getMonth() + 1;
-  const d = date.getDate();
-  const day = DAY_NAMES[date.getDay()];
-  return `${y}년 ${m}월 ${d}일 ${day}요일`;
-}
+import { toDateKey, formatDate } from "@/shared/lib";
 
 export function DateNavigator({ selectedDate, onPrev, onNext, onToday }) {
   const isToday = toDateKey(selectedDate) === toDateKey(new Date());
