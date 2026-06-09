@@ -1,6 +1,7 @@
 import { useTodos } from '@/entities/todo'
 import { AddTodoForm } from '@/features/add-todo'
-import { useFilter, FILTER, FilterTabs } from '@/features/filter-todos'
+import { FILTER } from '@/shared/lib'
+import { useFilter, FilterTabs } from '@/features/filter-todos'
 import { TodoListWidget } from '@/widgets/todo-list'
 
 export function TodoPage() {

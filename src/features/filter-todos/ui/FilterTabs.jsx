@@ -1,4 +1,4 @@
-import { FILTER } from '../model/useFilter'
+import { FILTER } from '@/shared/lib'
 
 const TABS = [
   { value: FILTER.ALL,       label: '전체' },

@@ -1,10 +1,5 @@
 import { useState } from 'react'
-
-export const FILTER = {
-  ALL: 'all',
-  ACTIVE: 'active',
-  COMPLETED: 'completed',
-}
+import { FILTER } from '@/shared/lib'
 
 export function useFilter() {
   const [currentFilter, setFilter] = useState(FILTER.ALL)
