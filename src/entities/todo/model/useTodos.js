@@ -1,8 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { loadJson, saveJson } from "@/shared/lib";
+
+const STORAGE_KEY = "todos";
 
 export function useTodos() {
-  const [todos, setTodos] = useState([]);
-  const [nextId, setNextId] = useState(1);
+  const [todos, setTodos] = useState(() => loadJson(STORAGE_KEY, []));
+  const [nextId, setNextId] = useState(() => {
+    const saved = loadJson(STORAGE_KEY, []);
+    return saved.length > 0 ? Math.max(...saved.map((t) => t.id)) + 1 : 1;
+  });
+
+  useEffect(() => {
+    saveJson(STORAGE_KEY, todos);
+  }, [todos]);
 
   const addTodo = (text, date) => {
     setTodos((prev) => [...prev, { id: nextId, text, completed: false, date }]);
