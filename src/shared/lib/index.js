@@ -1,1 +1,2 @@
-export { FILTER } from './filter'
+export { FILTER } from "./filter";
+export { toDateKey } from "./date";

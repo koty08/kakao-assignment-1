@@ -4,8 +4,8 @@ export function useTodos() {
   const [todos, setTodos] = useState([]);
   const [nextId, setNextId] = useState(1);
 
-  const addTodo = (text) => {
-    setTodos((prev) => [...prev, { id: nextId, text, completed: false }]);
+  const addTodo = (text, date) => {
+    setTodos((prev) => [...prev, { id: nextId, text, completed: false, date }]);
     setNextId((id) => id + 1);
   };
 

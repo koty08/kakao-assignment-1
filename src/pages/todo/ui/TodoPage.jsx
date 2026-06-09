@@ -1,18 +1,24 @@
-import { useTodos } from '@/entities/todo'
-import { AddTodoForm } from '@/features/add-todo'
-import { FILTER } from '@/shared/lib'
-import { useFilter, FilterTabs } from '@/features/filter-todos'
-import { TodoListWidget } from '@/widgets/todo-list'
+import { useTodos } from "@/entities/todo";
+import { AddTodoForm } from "@/features/add-todo";
+import { FILTER, toDateKey } from "@/shared/lib";
+import { useFilter, FilterTabs } from "@/features/filter-todos";
+import { useSelectedDate, DateNavigator } from "@/features/navigate-date";
+import { TodoListWidget } from "@/widgets/todo-list";
 
 export function TodoPage() {
-  const { todos, addTodo, deleteTodo, toggleTodo, editTodo } = useTodos()
-  const { currentFilter, setFilter } = useFilter()
+  const { todos, addTodo, deleteTodo, toggleTodo, editTodo } = useTodos();
+  const { currentFilter, setFilter } = useFilter();
+  const { selectedDate, goToPrev, goToNext, goToToday } = useSelectedDate();
 
-  const filteredTodos = todos.filter((todo) => {
-    if (currentFilter === FILTER.ACTIVE) return !todo.completed
-    if (currentFilter === FILTER.COMPLETED) return todo.completed
-    return true
-  })
+  const dateKey = toDateKey(selectedDate);
+
+  const filteredTodos = todos
+    .filter((todo) => todo.date === dateKey)
+    .filter((todo) => {
+      if (currentFilter === FILTER.ACTIVE) return !todo.completed;
+      if (currentFilter === FILTER.COMPLETED) return todo.completed;
+      return true;
+    });
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -23,16 +29,12 @@ export function TodoPage() {
         </header>
 
         <div className="flex flex-col gap-4">
+          <DateNavigator selectedDate={selectedDate} onPrev={goToPrev} onNext={goToNext} onToday={goToToday} />
           <FilterTabs currentFilter={currentFilter} onFilterChange={setFilter} />
-          <AddTodoForm onAdd={addTodo} />
-          <TodoListWidget
-            todos={filteredTodos}
-            onToggle={toggleTodo}
-            onEdit={editTodo}
-            onDelete={deleteTodo}
-          />
+          <AddTodoForm onAdd={(text) => addTodo(text, dateKey)} />
+          <TodoListWidget todos={filteredTodos} onToggle={toggleTodo} onEdit={editTodo} onDelete={deleteTodo} />
         </div>
       </div>
     </div>
-  )
+  );
 }
