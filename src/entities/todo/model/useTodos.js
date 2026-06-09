@@ -3,12 +3,13 @@ import { loadJson, saveJson } from "@/shared/lib";
 
 const STORAGE_KEY = "todos";
 
+function getInitialNextId(todos) {
+  return todos.length > 0 ? Math.max(...todos.map((t) => t.id)) + 1 : 1;
+}
+
 export function useTodos() {
   const [todos, setTodos] = useState(() => loadJson(STORAGE_KEY, []));
-  const [nextId, setNextId] = useState(() => {
-    const saved = loadJson(STORAGE_KEY, []);
-    return saved.length > 0 ? Math.max(...saved.map((t) => t.id)) + 1 : 1;
-  });
+  const [nextId, setNextId] = useState(() => getInitialNextId(loadJson(STORAGE_KEY, [])));
 
   useEffect(() => {
     saveJson(STORAGE_KEY, todos);
