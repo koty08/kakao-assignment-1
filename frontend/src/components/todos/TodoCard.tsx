@@ -18,25 +18,12 @@ export default function TodoCard({ todo, onDelete }: TodoCardProps) {
   return (
     <li className="flex items-center gap-3 rounded-xl bg-white p-4 ring-1 ring-gray-100 transition-shadow hover:shadow-sm">
       {/* 상태 표시 점 */}
-      <span
-        className={`h-2.5 w-2.5 shrink-0 rounded-full ${
-          isCompleted ? "bg-gray-300" : "bg-brand"
-        }`}
-        aria-hidden
-      />
+      <span className={`h-2.5 w-2.5 shrink-0 rounded-full ${isCompleted ? "bg-gray-300" : "bg-brand"}`} aria-hidden />
 
       {/* 내용 + 상태 라벨 */}
       <div className="min-w-0 flex-1">
-        <p
-          className={`truncate font-medium ${
-            isCompleted ? "text-gray-400 line-through" : "text-foreground"
-          }`}
-        >
-          {todo.content}
-        </p>
-        <span className="text-xs text-gray-400">
-          {TODO_STATE_LABEL[todo.state]}
-        </span>
+        <p className={`truncate font-medium ${isCompleted ? "text-gray-400 line-through" : "text-foreground"}`}>{todo.content}</p>
+        <span className="text-xs text-gray-400">{TODO_STATE_LABEL[todo.state]}</span>
       </div>
 
       {/* 수정 페이지 이동 */}
@@ -51,7 +38,7 @@ export default function TodoCard({ todo, onDelete }: TodoCardProps) {
       <button
         type="button"
         onClick={() => onDelete(todo.id)}
-        className="rounded-lg px-3 py-1.5 text-sm font-medium text-gray-500 transition-colors hover:bg-red-50 hover:text-red-500"
+        className="rounded-lg px-3 py-1.5 text-sm font-medium text-gray-500 transition-colors cursor-pointer hover:bg-red-50 hover:text-red-500"
       >
         삭제
       </button>

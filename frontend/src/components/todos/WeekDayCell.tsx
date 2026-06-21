@@ -14,28 +14,17 @@ interface WeekDayCellProps {
   onSelect: (date: Date) => void;
 }
 
-export default function WeekDayCell({
-  date,
-  weekdayIndex,
-  todoCount,
-  isSelected,
-  isToday,
-  onSelect,
-}: WeekDayCellProps) {
+export default function WeekDayCell({ date, weekdayIndex, todoCount, isSelected, isToday, onSelect }: WeekDayCellProps) {
   return (
     <button
       type="button"
       onClick={() => onSelect(date)}
-      className={`flex flex-1 flex-col items-center gap-1 rounded-xl py-2.5 transition-colors ${
+      className={`flex flex-1 flex-col items-center gap-1 cursor-pointer rounded-xl py-2.5 transition-colors ${
         isSelected ? "bg-brand text-white" : "text-gray-600 hover:bg-gray-50"
       }`}
     >
       {/* 요일 */}
-      <span
-        className={`text-xs ${isSelected ? "text-white/80" : "text-gray-400"}`}
-      >
-        {WEEKDAY_LABELS[weekdayIndex]}
-      </span>
+      <span className={`text-xs ${isSelected ? "text-white/80" : "text-gray-400"}`}>{WEEKDAY_LABELS[weekdayIndex]}</span>
 
       {/* 날짜 숫자 */}
       <span className="text-base font-semibold">{date.getDate()}</span>
@@ -43,23 +32,14 @@ export default function WeekDayCell({
       {/* Todo 개수 (0이면 자리만 유지) */}
       <span
         className={`flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[11px] font-medium ${
-          todoCount === 0
-            ? "text-transparent"
-            : isSelected
-              ? "bg-white/25 text-white"
-              : "bg-brand/10 text-brand"
+          todoCount === 0 ? "text-transparent" : isSelected ? "bg-white/25 text-white" : "bg-brand/10 text-brand"
         }`}
       >
         {todoCount}
       </span>
 
       {/* 오늘 표시 점 */}
-      <span
-        className={`h-1 w-1 rounded-full ${
-          isToday ? (isSelected ? "bg-white" : "bg-brand") : "bg-transparent"
-        }`}
-        aria-hidden
-      />
+      <span className={`h-1 w-1 rounded-full ${isToday ? (isSelected ? "bg-white" : "bg-brand") : "bg-transparent"}`} aria-hidden />
     </button>
   );
 }

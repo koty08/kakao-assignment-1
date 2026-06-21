@@ -1,13 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import {
-  addWeeks,
-  formatWeekLabel,
-  getWeekDates,
-  isSameDay,
-  toISODate,
-} from "@/lib/date";
+import { useEffect, useRef, useState } from "react";
+import { addWeeks, formatWeekLabel, getWeekDates, isSameDay, toISODate } from "@/lib/date";
 import WeekDayCell from "./WeekDayCell";
 import WeekPickerDropdown from "./WeekPickerDropdown";
 
@@ -25,17 +19,27 @@ interface WeekNavigatorProps {
   onSelectDate: (date: Date) => void;
 }
 
-export default function WeekNavigator({
-  currentMonday,
-  selectedDate,
-  todoCountByDate,
-  onChangeWeek,
-  onSelectDate,
-}: WeekNavigatorProps) {
+export default function WeekNavigator({ currentMonday, selectedDate, todoCountByDate, onChangeWeek, onSelectDate }: WeekNavigatorProps) {
   // 주차 선택 드롭다운 열림 상태
   const [isPickerOpen, setIsPickerOpen] = useState(false);
+  const pickerRef = useRef<HTMLDivElement>(null);
   const today = new Date();
   const weekDates = getWeekDates(currentMonday);
+
+  // 영역 바깥 클릭 시 닫힘 처리
+  useEffect(() => {
+    if (!isPickerOpen) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+      if (pickerRef.current && !pickerRef.current.contains(target)) {
+        setIsPickerOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isPickerOpen]);
 
   // 주차 라벨 클릭 → 드롭다운 토글
   const togglePicker = () => setIsPickerOpen((prev) => !prev);
@@ -59,8 +63,8 @@ export default function WeekNavigator({
           ‹
         </button>
 
-        {/* 주차 라벨 + 드롭다운 (relative 기준점) */}
-        <div className="relative">
+        {/* 주차 라벨 + 드롭다운 (relative 기준점, 바깥 클릭 판별 ref) */}
+        <div ref={pickerRef} className="relative">
           <button
             type="button"
             onClick={togglePicker}
@@ -70,12 +74,7 @@ export default function WeekNavigator({
             <span className="text-xs text-gray-400">▾</span>
           </button>
 
-          {isPickerOpen && (
-            <WeekPickerDropdown
-              currentMonday={currentMonday}
-              onSelectWeek={handleSelectWeek}
-            />
-          )}
+          {isPickerOpen && <WeekPickerDropdown currentMonday={currentMonday} onSelectWeek={handleSelectWeek} />}
         </div>
 
         <button
