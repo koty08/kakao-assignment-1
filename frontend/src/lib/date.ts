@@ -15,6 +15,17 @@ export function toISODate(date: Date): string {
   return `${year}-${month}-${day}`;
 }
 
+/** 'YYYY-MM-DD' 문자열을 로컬 시간 기준 Date로 변환한다. */
+export function fromISODate(iso: string): Date {
+  const [year, month, day] = iso.split("-").map(Number);
+  return new Date(year, month - 1, day);
+}
+
+/** "2026년 6월 21일" 형식으로 날짜를 표시한다. */
+export function formatKoreanDate(date: Date): string {
+  return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
+}
+
 /** 시/분/초를 0으로 초기화한 새 Date를 반환한다. */
 function startOfDay(date: Date): Date {
   const result = new Date(date);

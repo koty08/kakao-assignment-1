@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { TodoState } from "@/types/todo";
-import { TODO_STATE_LABEL } from "@/types/todo";
+import StateSelect from "./StateSelect";
+import DatePickerField from "./DatePickerField";
 
 /**
  * Todo 생성/수정 공용 폼.
@@ -62,33 +63,23 @@ export default function TodoForm({
         />
       </label>
 
-      {/* 대상 날짜 */}
-      <label className="flex flex-col gap-1.5">
+      {/* 대상 날짜 (react-day-picker 달력) */}
+      <div className="flex flex-col gap-1.5">
         <span className="text-sm font-medium text-foreground">날짜</span>
-        <input
-          type="date"
+        <DatePickerField
           value={values.date}
-          onChange={(e) => handleChange("date", e.target.value)}
-          required
-          className="rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none transition-colors focus:border-brand"
+          onChange={(date) => handleChange("date", date)}
         />
-      </label>
+      </div>
 
-      {/* 상태 */}
-      <label className="flex flex-col gap-1.5">
+      {/* 상태 (커스텀 드롭다운) */}
+      <div className="flex flex-col gap-1.5">
         <span className="text-sm font-medium text-foreground">상태</span>
-        <select
+        <StateSelect
           value={values.state}
-          onChange={(e) => handleChange("state", e.target.value)}
-          className="rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none transition-colors focus:border-brand"
-        >
-          {(Object.keys(TODO_STATE_LABEL) as TodoState[]).map((state) => (
-            <option key={state} value={state}>
-              {TODO_STATE_LABEL[state]}
-            </option>
-          ))}
-        </select>
-      </label>
+          onChange={(state) => handleChange("state", state)}
+        />
+      </div>
 
       {/* 액션 버튼 */}
       <div className="mt-2 flex gap-2">
