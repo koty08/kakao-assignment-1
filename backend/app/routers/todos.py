@@ -37,11 +37,17 @@ def get_todo_or_404(todo_id: int, db: Session = Depends(get_db)):
 @router.get("", response_model=list[TodoRead])
 def read_todos(
     todo_filter: TodoFilter = Query(default=TodoFilter.all, alias="filter"),
+    search: str | None = Query(default=None),
     db: Session = Depends(get_db),
 ):
-    """Todo 목록 조회. ?filter=all|active|completed 로 상태별 필터링."""
+    """Todo 목록 조회.
+
+    - ?filter=all|active|completed : 상태별 필터링
+    - ?search=키워드 : content에 키워드가 포함된 Todo 검색
+    - 두 조건은 함께 사용 가능 (AND).
+    """
     state = _FILTER_TO_STATE.get(todo_filter)  # all이면 None → 전체 조회
-    return todo_crud.get_todos(db, state=state)
+    return todo_crud.get_todos(db, state=state, search=search)
 
 
 @router.get("/{todo_id}", response_model=TodoRead)

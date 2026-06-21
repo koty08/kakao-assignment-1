@@ -11,15 +11,23 @@ from app.models.todo import Todo, TodoState
 from app.schemas.todo import TodoCreate, TodoUpdate
 
 
-def get_todos(db: Session, state: TodoState | None = None) -> list[Todo]:
-    """Todo 목록을 최신 생성순(내림차순)으로 조회한다.
+def get_todos(
+    db: Session,
+    state: TodoState | None = None,
+    search: str | None = None,
+) -> list[Todo]:
+    """Todo 목록을 최신 생성순(내림차순)으로 조회한다 (서버 사이드 필터링/검색).
 
-    - state가 주어지면 해당 상태의 Todo만 필터링한다 (서버 사이드 필터링).
-    - state가 None이면 전체를 반환한다.
+    - state가 주어지면 해당 상태의 Todo만 필터링한다.
+    - search가 주어지면 content에 키워드가 포함된 Todo만 조회한다 (대소문자 무시).
+    - state와 search는 동시에 적용할 수 있다 (AND 조건).
     """
     statement = select(Todo)
     if state is not None:
         statement = statement.where(Todo.state == state)
+    if search:
+        # ilike: 대소문자 구분 없이 부분 일치 (%키워드%)
+        statement = statement.where(Todo.content.ilike(f"%{search}%"))
     statement = statement.order_by(Todo.created_at.desc())
     return list(db.scalars(statement).all())
 

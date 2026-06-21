@@ -20,7 +20,22 @@ export function normalizeFilter(value?: string | null): TodoFilter {
   return value === "active" || value === "completed" ? value : "all";
 }
 
-/** 필터 값에 해당하는 /todos URL(쿼리 포함)을 만든다. 전체는 쿼리 없이 깔끔하게. */
-export function buildFilterHref(filter: TodoFilter): string {
-  return filter === "all" ? "/todos" : `/todos?filter=${filter}`;
+/**
+ * filter/search를 반영한 /todos URL을 만든다.
+ * - 기본값(filter=all, 빈 search)은 쿼리에서 생략해 URL을 깔끔하게 유지한다.
+ * - 필터 탭/검색창이 서로의 값을 보존하며 URL을 갱신할 때 공통으로 사용한다.
+ */
+export function buildTodosHref({
+  filter = "all",
+  search = "",
+}: {
+  filter?: TodoFilter;
+  search?: string;
+}): string {
+  const params = new URLSearchParams();
+  if (filter !== "all") params.set("filter", filter);
+  if (search.trim()) params.set("search", search.trim());
+
+  const queryString = params.toString();
+  return queryString ? `/todos?${queryString}` : "/todos";
 }

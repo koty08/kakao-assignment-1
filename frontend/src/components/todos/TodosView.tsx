@@ -10,6 +10,7 @@ import { getMonday, isSameDay, toISODate } from "@/lib/date";
 import WeekNavigator from "./WeekNavigator";
 import TodoList from "./TodoList";
 import TodoFilterTabs from "./TodoFilterTabs";
+import TodoSearchInput from "./TodoSearchInput";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 
 /**
@@ -21,20 +22,21 @@ import ConfirmDialog from "@/components/ui/ConfirmDialog";
  */
 interface TodosViewProps {
   filter: TodoFilter;
+  search: string;
 }
 
-export default function TodosView({ filter }: TodosViewProps) {
+export default function TodosView({ filter, search }: TodosViewProps) {
   const today = new Date();
   const queryClient = useQueryClient();
 
-  // 목록 조회 (필터별 캐시). staleTime 0 → 변경 후 돌아올 때 항상 최신 데이터 재조회.
+  // 목록 조회 (필터/검색 조합별 캐시). staleTime 0 → 변경 후 돌아올 때 항상 최신 재조회.
   const {
     data: todos = [],
     isLoading,
     isError,
   } = useQuery({
-    queryKey: todoKeys.list(filter),
-    queryFn: () => fetchTodos(filter),
+    queryKey: todoKeys.list(filter, search),
+    queryFn: () => fetchTodos(filter, search),
     staleTime: 0,
   });
 
@@ -123,8 +125,11 @@ export default function TodosView({ filter }: TodosViewProps) {
         onSelectDate={setSelectedDate}
       />
 
+      {/* 검색창 */}
+      <TodoSearchInput filter={filter} initialSearch={search} />
+
       {/* 상태 필터 탭 */}
-      <TodoFilterTabs current={filter} />
+      <TodoFilterTabs current={filter} search={search} />
 
       {/* 선택 날짜 라벨 */}
       <p className="px-1 text-sm text-gray-500">
