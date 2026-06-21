@@ -33,6 +33,12 @@ def read_todos(db: Session = Depends(get_db)):
     return todo_crud.get_todos(db)
 
 
+@router.get("/{todo_id}", response_model=TodoRead)
+def read_todo(todo=Depends(get_todo_or_404)):
+    """단일 Todo 조회 (수정 페이지 등에서 사용). 없으면 404."""
+    return todo
+
+
 @router.post("", response_model=TodoRead, status_code=status.HTTP_201_CREATED)
 def create_todo(payload: TodoCreate, db: Session = Depends(get_db)):
     """새 Todo 생성."""

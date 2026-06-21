@@ -1,6 +1,7 @@
 import Link from "next/link";
 import TodoForm from "@/components/todos/TodoForm";
 import { toISODate } from "@/lib/date";
+import { createTodo } from "../actions";
 
 /**
  * Todo 생성 페이지 (/todos/new)
@@ -26,7 +27,11 @@ export default function NewTodoPage() {
         <h1 className="text-xl font-bold text-foreground">새 Todo</h1>
       </header>
 
-      <TodoForm initialValues={initialValues} submitLabel="추가" />
+      <TodoForm
+        initialValues={initialValues}
+        submitLabel="추가"
+        action={createTodo}
+      />
     </main>
   );
 }

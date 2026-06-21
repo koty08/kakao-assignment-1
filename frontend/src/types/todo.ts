@@ -11,7 +11,7 @@ export interface Todo {
   content: string;
   state: TodoState;
   date: string; // 대상 날짜 (YYYY-MM-DD)
-  createdAt: string; // 등록 시각 (ISO 문자열)
+  created_at: string; // 등록 시각 (백엔드 응답 필드명과 동일)
 }
 
 // 상태 → 한국어 라벨 매핑 (UI 표시에 사용)
