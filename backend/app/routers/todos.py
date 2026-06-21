@@ -5,15 +5,22 @@
 - 존재하지 않는 리소스 접근 시 404를 반환한다.
 """
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.crud import todo as todo_crud
-from app.schemas.todo import TodoCreate, TodoRead, TodoUpdate
+from app.models.todo import TodoState
+from app.schemas.todo import TodoCreate, TodoFilter, TodoRead, TodoUpdate
 
 # 이 라우터의 모든 경로는 /todos 로 시작하고, 문서상 "todos" 태그로 묶인다.
 router = APIRouter(prefix="/todos", tags=["todos"])
+
+# 필터 값 → 실제 Todo 상태 매핑 (all은 전체이므로 매핑 없음)
+_FILTER_TO_STATE: dict[TodoFilter, TodoState] = {
+    TodoFilter.active: TodoState.IN_PROGRESS,
+    TodoFilter.completed: TodoState.COMPLETED,
+}
 
 
 def get_todo_or_404(todo_id: int, db: Session = Depends(get_db)):
@@ -28,9 +35,13 @@ def get_todo_or_404(todo_id: int, db: Session = Depends(get_db)):
 
 
 @router.get("", response_model=list[TodoRead])
-def read_todos(db: Session = Depends(get_db)):
-    """전체 Todo 목록 조회."""
-    return todo_crud.get_todos(db)
+def read_todos(
+    todo_filter: TodoFilter = Query(default=TodoFilter.all, alias="filter"),
+    db: Session = Depends(get_db),
+):
+    """Todo 목록 조회. ?filter=all|active|completed 로 상태별 필터링."""
+    state = _FILTER_TO_STATE.get(todo_filter)  # all이면 None → 전체 조회
+    return todo_crud.get_todos(db, state=state)
 
 
 @router.get("/{todo_id}", response_model=TodoRead)

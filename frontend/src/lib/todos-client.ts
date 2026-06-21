@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { Todo } from "@/types/todo";
+import type { Todo, TodoFilter } from "@/types/todo";
 
 /**
  * 브라우저(클라이언트)에서 사용하는 Todo 조회 유틸.
@@ -10,10 +10,14 @@ import type { Todo } from "@/types/todo";
 // 쿼리 키를 한곳에서 관리 (캐시 무효화 시 일관성 유지)
 export const todoKeys = {
   all: ["todos"] as const,
+  // 필터별로 캐시를 구분한다. (filter 변경 시 자동 재조회)
+  list: (filter: TodoFilter) => ["todos", filter] as const,
 };
 
-/** Next API Route를 통해 전체 Todo 목록을 가져온다. */
-export async function fetchTodos(): Promise<Todo[]> {
-  const { data } = await axios.get<Todo[]>("/api/todos");
+/** Next API Route를 통해 (필터된) Todo 목록을 가져온다. */
+export async function fetchTodos(filter: TodoFilter): Promise<Todo[]> {
+  const { data } = await axios.get<Todo[]>("/api/todos", {
+    params: { filter },
+  });
   return data;
 }

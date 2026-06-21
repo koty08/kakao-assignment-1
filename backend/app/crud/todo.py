@@ -7,13 +7,20 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.models.todo import Todo
+from app.models.todo import Todo, TodoState
 from app.schemas.todo import TodoCreate, TodoUpdate
 
 
-def get_todos(db: Session) -> list[Todo]:
-    """전체 Todo 목록을 최신 생성순(내림차순)으로 조회한다."""
-    statement = select(Todo).order_by(Todo.created_at.desc())
+def get_todos(db: Session, state: TodoState | None = None) -> list[Todo]:
+    """Todo 목록을 최신 생성순(내림차순)으로 조회한다.
+
+    - state가 주어지면 해당 상태의 Todo만 필터링한다 (서버 사이드 필터링).
+    - state가 None이면 전체를 반환한다.
+    """
+    statement = select(Todo)
+    if state is not None:
+        statement = statement.where(Todo.state == state)
+    statement = statement.order_by(Todo.created_at.desc())
     return list(db.scalars(statement).all())
 
 

@@ -44,3 +44,12 @@ export async function deleteTodo(id: number) {
   await backendApi.delete(`/todos/${id}`);
   revalidatePath("/todos");
 }
+
+/**
+ * Todo 상태 토글/변경 (목록에서 진행 중 ↔ 완료 전환).
+ * - 상태만 부분 수정하므로 redirect 없이 revalidate만 한다.
+ */
+export async function setTodoState(id: number, state: TodoState) {
+  await backendApi.put(`/todos/${id}`, { state });
+  revalidatePath("/todos");
+}

@@ -11,10 +11,19 @@ datetime 모듈을 통째로 import 해 `datetime.date`로 타입을 참조한�
 """
 
 import datetime
+import enum
 
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.models.todo import TodoState
+
+
+class TodoFilter(str, enum.Enum):
+    """목록 조회 시 사용하는 상태 필터 값 (쿼리 파라미터 ?filter=...)."""
+
+    all = "all"  # 전체
+    active = "active"  # 진행 중
+    completed = "completed"  # 완료
 
 
 class TodoCreate(BaseModel):

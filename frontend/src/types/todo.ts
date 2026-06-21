@@ -6,6 +6,9 @@
 // Todo 진행 상태
 export type TodoState = "in_progress" | "completed";
 
+// 목록 상태 필터 (URL 파라미터 ?filter=... 및 백엔드 쿼리와 동일한 값)
+export type TodoFilter = "all" | "active" | "completed";
+
 export interface Todo {
   id: number;
   content: string;

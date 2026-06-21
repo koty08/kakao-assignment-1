@@ -8,10 +8,11 @@ import TodoCard from "./TodoCard";
  */
 interface TodoListProps {
   todos: Todo[];
+  onToggle: (todo: Todo) => void;
   onDelete: (id: number) => void;
 }
 
-export default function TodoList({ todos, onDelete }: TodoListProps) {
+export default function TodoList({ todos, onToggle, onDelete }: TodoListProps) {
   // 빈 상태: 선택한 날짜에 Todo가 없을 때
   if (todos.length === 0) {
     return (
@@ -24,7 +25,12 @@ export default function TodoList({ todos, onDelete }: TodoListProps) {
   return (
     <ul className="flex flex-col gap-2">
       {todos.map((todo) => (
-        <TodoCard key={todo.id} todo={todo} onDelete={onDelete} />
+        <TodoCard
+          key={todo.id}
+          todo={todo}
+          onToggle={onToggle}
+          onDelete={onDelete}
+        />
       ))}
     </ul>
   );
