@@ -1,0 +1,10 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# 환경 변수
+.env
+
+# SQLite 데이터베이스
+*.db
