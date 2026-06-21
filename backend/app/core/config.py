@@ -4,7 +4,12 @@
 - 설정 값을 한 곳에서 관리해, 코드 곳곳에 하드코딩되는 것을 방지한다.
 """
 
+from pathlib import Path
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+# backend 디렉토리 경로 (이 파일: backend/app/core/config.py → parents[2] = backend)
+BACKEND_DIR = Path(__file__).resolve().parents[2]
 
 
 class Settings(BaseSettings):
@@ -17,8 +22,13 @@ class Settings(BaseSettings):
     # CORS 허용 출처 목록 (프론트엔드 개발 서버 주소)
     CORS_ORIGINS: list[str] = ["http://localhost:3000"]
 
-    # .env 파일을 읽고, 정의되지 않은 추가 환경변수는 무시한다.
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+    # backend/.env 파일을 읽는다 (실행 위치와 무관하게 절대 경로로 지정).
+    # 정의되지 않은 추가 환경변수는 무시한다.
+    model_config = SettingsConfigDict(
+        env_file=BACKEND_DIR / ".env",
+        env_file_encoding="utf-8",
+        extra="ignore",
+    )
 
 
 # 앱 전역에서 import 해 사용하는 단일 설정 인스턴스
