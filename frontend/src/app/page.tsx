@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 /**
  * 홈 페이지
  * - 프로젝트 초기 세팅이 정상 동작하는지 확인하기 위한 기본 랜딩 화면.
@@ -23,13 +25,13 @@ export default function Home() {
           기본 환경이 정상적으로 구성되었습니다.
         </p>
 
-        {/* 브랜드 컬러 버튼 (현재는 표시용) */}
-        <button
-          type="button"
-          className="mt-8 w-full rounded-xl bg-brand px-4 py-3 font-semibold text-white transition-colors hover:bg-brand-hover"
+        {/* Todo 목록 페이지로 이동 */}
+        <Link
+          href="/todos"
+          className="mt-8 block w-full rounded-xl bg-brand px-4 py-3 font-semibold text-white transition-colors hover:bg-brand-hover"
         >
           시작하기
-        </button>
+        </Link>
       </section>
     </main>
   );
