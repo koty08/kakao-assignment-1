@@ -7,6 +7,7 @@ import { MOCK_TODOS } from "@/mocks/todos";
 import { getMonday, isSameDay, toISODate } from "@/lib/date";
 import WeekNavigator from "./WeekNavigator";
 import TodoList from "./TodoList";
+import ConfirmDialog from "@/components/ui/ConfirmDialog";
 
 /**
  * Todo 목록 페이지의 상태 컨테이너.
@@ -21,6 +22,8 @@ export default function TodosView() {
   const [todos, setTodos] = useState<Todo[]>(MOCK_TODOS);
   const [selectedDate, setSelectedDate] = useState<Date>(today);
   const [currentMonday, setCurrentMonday] = useState<Date>(getMonday(today));
+  // 삭제 확인 모달의 대상 Todo (null이면 모달 닫힘)
+  const [deleteTarget, setDeleteTarget] = useState<Todo | null>(null);
 
   // 날짜별 Todo 개수 맵 ('YYYY-MM-DD' → 개수). 주간 뷰 셀에 표시한다.
   const todoCountByDate = useMemo(() => {
@@ -42,9 +45,17 @@ export default function TodosView() {
     setSelectedDate(monday);
   };
 
-  // 삭제: 로컬 상태에서만 제거 (API 연동 전)
-  const handleDelete = (id: number) => {
-    setTodos((prev) => prev.filter((todo) => todo.id !== id));
+  // 삭제 요청: 바로 지우지 않고 확인 모달을 띄운다.
+  const handleRequestDelete = (id: number) => {
+    const target = todos.find((todo) => todo.id === id) ?? null;
+    setDeleteTarget(target);
+  };
+
+  // 삭제 확정: 로컬 상태에서 제거 후 모달을 닫는다 (API 연동 전).
+  const handleConfirmDelete = () => {
+    if (!deleteTarget) return;
+    setTodos((prev) => prev.filter((todo) => todo.id !== deleteTarget.id));
+    setDeleteTarget(null);
   };
 
   return (
@@ -76,7 +87,21 @@ export default function TodosView() {
       </p>
 
       {/* 목록 */}
-      <TodoList todos={visibleTodos} onDelete={handleDelete} />
+      <TodoList todos={visibleTodos} onDelete={handleRequestDelete} />
+
+      {/* 삭제 확인 모달 */}
+      <ConfirmDialog
+        open={deleteTarget !== null}
+        title="Todo를 삭제할까요?"
+        description={
+          deleteTarget
+            ? `"${deleteTarget.content}" 항목이 삭제됩니다. 이 작업은 되돌릴 수 없습니다.`
+            : undefined
+        }
+        confirmLabel="삭제"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </main>
   );
 }
