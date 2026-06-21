@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { addWeeks, formatWeekLabel, getWeekDates, isSameDay, toISODate } from "@/lib/date";
+import { useClickOutside } from "@/hooks/useClickOutside";
 import WeekDayCell from "./WeekDayCell";
 import WeekPickerDropdown from "./WeekPickerDropdown";
 
@@ -26,20 +27,8 @@ export default function WeekNavigator({ currentMonday, selectedDate, todoCountBy
   const today = new Date();
   const weekDates = getWeekDates(currentMonday);
 
-  // 영역 바깥 클릭 시 닫힘 처리
-  useEffect(() => {
-    if (!isPickerOpen) return;
-
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as Node;
-      if (pickerRef.current && !pickerRef.current.contains(target)) {
-        setIsPickerOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isPickerOpen]);
+  // 영역 바깥 클릭 시 닫힘 처리 (열려 있을 때만 활성화)
+  useClickOutside(pickerRef, () => setIsPickerOpen(false), isPickerOpen);
 
   // 주차 라벨 클릭 → 드롭다운 토글
   const togglePicker = () => setIsPickerOpen((prev) => !prev);
